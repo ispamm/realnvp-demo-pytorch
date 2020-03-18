@@ -206,11 +206,6 @@ class LinearRNVP(nn.Module):
 
         for i in range(flow_n):
 
-            if use_permutation:
-                parity = 0
-            else:
-                parity = i % 2
-
             blocks.append(LinearCouplingLayer(input_dim, mask, network_topology=coupling_topology,
                                               conditioning_size=conditioning_size, single_function=single_function))
 
@@ -226,7 +221,6 @@ class LinearRNVP(nn.Module):
         self.flows = SequentialFlow(*blocks)
 
     def logprob(self, x):
-        #return -0.5 * x.shape[1] * np.log(2 * np.pi) - 0.5 * x ** 2
         return self.prior.log_prob(x)
 
     @property
@@ -235,12 +229,12 @@ class LinearRNVP(nn.Module):
 
     def forward(self, x, y=None, return_step=False):
         if return_step:
-            return self.flows.forward_steps(x)
+            return self.flows.forward_steps(x, y)
         return self.flows.forward(x, y)
 
     def backward(self, u, y=None, return_step=False):
         if return_step:
-            return self.flows.backward_steps(u)
+            return self.flows.backward_steps(u, y)
         return self.flows.backward(u, y)
 
     def sample(self, samples=1, y=None, return_step=False, return_logdet=False):
