@@ -12,10 +12,10 @@ from torchvision import datasets, transforms
 
 class LinearBatchNorm(nn.Module):
     """
-	An (invertible) batch normalization layer.
-	This class is mostly inspired from this one:
-	https://github.com/kamenbliznashki/normalizing_flows/blob/master/maf.py
-	"""
+    An (invertible) batch normalization layer.
+    This class is mostly inspired from this one:
+    https://github.com/kamenbliznashki/normalizing_flows/blob/master/maf.py
+    """
 
     def __init__(self, input_size, momentum=0.9, eps=1e-5):
         super().__init__()
@@ -66,13 +66,14 @@ class LinearBatchNorm(nn.Module):
 
 
 class LinearCouplingLayer(nn.Module):
-	"""
-	Linear coupling layer. 
-		(i) Split the input x into 2 parts x1 and x2 according to a given mask.
-		(ii) Compute s(x2) and t(x2) with given neural network.
-		(iii) Final output is [exp(s(x2))*x1 + t(x2); x2].
-	The inverse is trivially [(x1 - t(x2))*exp(-s(x2)); x2].
-	"""
+    """
+    Linear coupling layer.
+        (i) Split the input x into 2 parts x1 and x2 according to a given mask.
+        (ii) Compute s(x2) and t(x2) with given neural network.
+        (iii) Final output is [exp(s(x2))*x1 + t(x2); x2].
+    The inverse is trivially [(x1 - t(x2))*exp(-s(x2)); x2].
+    """
+
     def __init__(self, input_dim, mask, network_topology, conditioning_size=None, single_function=True):
         super().__init__()
 
@@ -143,9 +144,9 @@ class LinearCouplingLayer(nn.Module):
 
 
 class Permutation(nn.Module):
-	"""
-	A permutation layer.
-	"""
+    """
+    A permutation layer.
+    """
     def __init__(self, in_ch):
         super().__init__()
         self.in_ch = in_ch
@@ -164,10 +165,10 @@ class Permutation(nn.Module):
 
 
 class SequentialFlow(nn.Sequential):
-	"""
-	Utility class to build a normalizing flow from a sequence of base transformations.
-	During forward and inverse steps, aggregates the sum of the log determinants of the Jacobians.
-	"""
+    """
+    Utility class to build a normalizing flow from a sequence of base transformations.
+    During forward and inverse steps, aggregates the sum of the log determinants of the Jacobians.
+    """
     def forward(self, x, y=None):
         log_det = 0
         for module in self:
@@ -202,10 +203,10 @@ class SequentialFlow(nn.Sequential):
 
 
 class LinearRNVP(nn.Module):
-	"""
-	Main RNVP model, alternating affine coupling layers 
-	with permutations and/or batch normalization steps.
-	"""
+    """
+    Main RNVP model, alternating affine coupling layers
+    with permutations and/or batch normalization steps.
+    """
     def __init__(self, input_dim, coupling_topology, flow_n=2, use_permutation=False,
                  batch_norm=False, mask_type='odds', conditioning_size=None, single_function=False):
         super().__init__()
